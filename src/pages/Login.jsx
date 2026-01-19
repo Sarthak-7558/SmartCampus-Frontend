@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../api/AxiosInstance";
+import authAxios from "../api/AuthAxios";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -16,28 +16,29 @@ const Login = () => {
     setError("");
 
     try {
-      // ✅ USE axiosInstance (NOT authAxios)
-      const response = await axiosInstance.post("/api/auth/login", {
+      const res = await authAxios.post("/api/auth/login", {
         email,
         password,
       });
 
-      const { token, role } = response.data;
+      // ✅ BACKEND MUST RETURN { token, role }
+      const { token, role } = res.data || {};
 
-      // ✅ STORE AUTH
-      login({
-        token,
-        role,
-        email,
-      });
+      if (!token || !role) {
+        throw new Error("Invalid login response");
+      }
 
-      // ✅ REDIRECT
+      // ✅ Save token (ONLY token is stored)
+      login(token);
+
+      // ✅ Redirect based on role
       if (role === "STUDENT") navigate("/student");
       else if (role === "STAFF") navigate("/staff");
       else if (role === "ADMIN") navigate("/admin");
-      else console.error("Unknown role:", role);
+      else throw new Error("Unknown role");
 
     } catch (err) {
+      console.error("Login error:", err);
       setError("Invalid email or password");
     }
   };
@@ -53,7 +54,9 @@ const Login = () => {
         </h2>
 
         {error && (
-          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+          <p className="text-red-500 text-sm mb-4 text-center">
+            {error}
+          </p>
         )}
 
         <input
