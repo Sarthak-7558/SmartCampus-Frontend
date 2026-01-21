@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authAxios = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://smartcampus-backend-cj1t.onrender.com"
 });
 
 export default authAxios;
