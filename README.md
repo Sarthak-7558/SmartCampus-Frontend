@@ -99,7 +99,7 @@ The **Smart Campus Issue Management System** solves this by providing a **centra
 ## 🔗 Repositories
 
 - Frontend: https://github.com/Sarthak-7558/SmartCampus-Frontend  
-- Backend: (Will be added after deployment)
+- Backend: https://github.com/Sarthak-7558/SmartCampus-Backend
 
 ---
 
